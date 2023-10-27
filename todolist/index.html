@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>ToDo List</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        background-color: bisque;
+      }
+      #wrapper h2 {
+        display: flex;
+        justify-content: center;
+      }
+      h2 {
+        color: #ffeba7;
+        letter-spacing: 1px;
+      }
+      input {
+        border-radius: 5px;
+        border: 2px solid black;
+        margin-top: -1px;
+        height: 45px;
+        width: 100%;
+        padding-left: 5px;
+      }
+      input:active {
+        border: none;
+      }
+      #wrapper {
+        height: 500px;
+        width: 400px;
+        margin: 200px auto;
+        background-color: #1f2029;
+        border-radius: 10px;
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+      }
+      button {
+        margin-top: 20px;
+        width: 100px;
+        margin-left: 150px;
+        background-color: #ffeba7;
+        border-radius: 4px;
+        height: 35px;
+        font-weight: 600;
+        padding: 0 30px;
+        letter-spacing: 1px;
+        border: none;
+        color: #102770;
+      }
+      button:hover {
+        cursor: pointer;
+      }
+      #todoList {
+        color: white;
+        font-size: 28px;
+        margin-top: 10px;
+      }
+      #todoList p {
+        margin: 10px 0px;
+      }
+      #todoList p:hover {
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="wrapper">
+      <h2>Todo List</h2>
+      <input type="text" id="input" />
+      <button id="add">Add</button>
+      <div id="todoList"></div>
+    </div>
+    <script>
+      let button = document.getElementById("add");
+      let input = document.getElementById("input");
+      let todoList = document.getElementById("todoList");
+      let todoArray = [];
+      window.onload = () => {
+        todoArray = JSON.parse(localStorage.getItem("todoArray")) || [];
+        console.log(todoArray);
+        todoArray.forEach((todo) => addtodo(todo));
+      };
+      button.addEventListener("click", () => {
+        todoArray.push(input.value);
+        localStorage.setItem("todoArray", JSON.stringify(todoArray));
+        addtodo(input.value);
+        input.value = "";
+      });
+      let count = 0;
+      function addtodo(todo) {
+        let para = document.createElement("p");
+        para.innerText = todo;
+        todoList.appendChild(para);
+
+        para.addEventListener("click", () => {
+          if (count == 0) {
+            para.style.textDecoration = "underline";
+            count++;
+          } else {
+            para.style.textDecoration = "";
+            count--;
+          }
+        });
+        para.addEventListener("dblclick", () => {
+          todoList.removeChild(para);
+          remove(todo);
+        });
+      }
+      function remove(todo) {
+        let index = todoArray.indexOf(todo);
+        if (index > -1) {
+          todoArray.splice(index, 1);
+        }
+        localStorage.setItem("todoArray", JSON.stringify(todoArray));
+      }
+    </script>
+  </body>
+</html>
